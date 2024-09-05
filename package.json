@@ -1,0 +1,17 @@
+{
+  "name": "c_server",
+  "version": "1.0.0",
+  "description": "server for the collaborative board.",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Akhil Sharma",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.19.2",
+    "socket.io": "^4.7.5",
+    "ws": "^8.18.0"
+  }
+}
