@@ -70,7 +70,6 @@ function redrawCanvas() {
 
         context.strokeStyle = element.color;
         context.lineWidth = element.thickness;
-        context.closePath();
         context.stroke();
     });
 }
@@ -95,6 +94,7 @@ const SUPPORTED_ELEMENTS = {
 }
 
 canvas.addEventListener("mousedown", (e) => {
+    console.debug(`mousedown called with event: ${e}`);
     const {x, y} = normalizeCoordinates(e.clientX, e.clientY);
     currentElement = {
         type: SUPPORTED_ELEMENTS.LINE,
@@ -111,6 +111,7 @@ canvas.addEventListener("mousedown", (e) => {
 
 canvas.addEventListener("mousemove", (e) => {
     if (!currentElement) return;
+    console.debug(`valid mousemove called with event: ${e}`);
 
     const { x, y } = normalizeCoordinates(e.clientX, e.clientY);
   
@@ -124,20 +125,18 @@ canvas.addEventListener("mousemove", (e) => {
 
 canvas.addEventListener("mouseout", () => {
     if (!currentElement) return;
-
+    console.debug(`valid mouseout called with event`);
     elements.push(currentElement);
     sendDrawnElement(currentElement);
     currentElement = null;
-    context.closePath();
 });
 
 canvas.addEventListener("mouseup", (event) => {
     if (!currentElement) return;
-
+    console.debug(`valid mouseup called with event: ${event}`);
     elements.push(currentElement);
     sendDrawnElement(currentElement);
     currentElement = null;
-    context.closePath();
 });
 
 
@@ -146,15 +145,18 @@ socket.on('connect', () => {
 });
 
 socket.on('canvas_update', data => {
+    console.debug(`received a canvas_update socket event with data: ${data}`);
     elements.push(data);
     redrawCanvas();
 });
 
 socket.on('element_delete', index => {
+    console.debug(`received a element_delete socket event with index: ${index}`);
     deleteElement(index);
 });
 
 socket.on('elements_init', elementsBuffer => {
+    console.debug(`received a element_init socket event with elementsBuffer: ${elementsBuffer}`);
     elements = elementsBuffer;
     redrawCanvas();
 });
