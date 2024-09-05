@@ -5,4 +5,4 @@
 2. `node src/index.js`
 
 ### Browser
-1. On multiple browse tabs open ("http://localhost:3000/")[whiteboard]
+1. On multiple browse tabs open [whiteboard](http://localhost:3000/)
