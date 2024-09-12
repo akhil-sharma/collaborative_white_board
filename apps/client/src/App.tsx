@@ -1,34 +1,78 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useState, useRef, useEffect } from 'react'
+import { useSocket } from './services/socket'
+import { CanvasElement } from '../../../shared/canvasTypes'
+import './styles/CanvasDrawing.css'
 
-function App() {
-  const [count, setCount] = useState(0)
+const App: React.FC = () => {
+  const socket = useSocket()
+  const canvasRef = useRef<HTMLCanvasElement | null>(null)
+  const [elements, setElements] = useState<Array<CanvasElement>>([])
+  const [currentElement, setCurrentElement] = useState<CanvasElement | null>(null)
+  const [color, setColor] = useState<string>("#bdc4a7")
+  const [lineWidth, setLineWidth] = useState<number>(5)
+  
+  useEffect(() => {
+
+  }, [elements]);
+
+  const handleMousedown = () => {
+
+  }
+
+  const handleMouseMove = () => {
+
+  }
+
+  const handleMouseUp = () => {
+
+  }
+
+  const handleMouseOut = () => {
+
+  }
+
+  const handleOnWheel = () => {
+
+  }
+
+  const handleOnTouchStart = () => {
+
+  }
+
+  const handleOnTouchMove = () => {
+
+  }
+
+  const handleOnTouchCancel = () => {
+
+  }
+
+  const handleOnTouchEnd = () => {
+
+  }
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div className='canvas-container'>
+      <canvas 
+        ref={canvasRef}
+        onMouseDown={() => {}}
+        onMouseMove={() => {}}
+        onMouseUp={() => {}}
+        onMouseOut={() => {}}
+        onWheel={() => {}}
+        onTouchStart={() => {}}
+        onTouchMove={() => {}}
+        onTouchCancel={() => {}}
+        onTouchEnd={() => {}}
+        onContextMenu={(e)=> e.preventDefault()}
+        ></canvas>
+        <input 
+          type="color" 
+          value={color} 
+          onChange={(e) => {setColor(e.target.value)}}
+          className='color-picker'
+        />
+    </div>
   )
 }
 
