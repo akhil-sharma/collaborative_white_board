@@ -1,79 +1,50 @@
-import React, { useState, useRef, useEffect } from 'react'
-import { useSocket } from './services/socket'
-import { CanvasElement } from '../../../shared/canvasTypes'
-import './styles/CanvasDrawing.css'
+import React, {useEffect, useState, useRef} from "react";
+import Canvas from "./components/Canvas";
+import { CanvasElement, CanvasEvents, ToolTypes } from "@collaborative-drawing-board/shared";
 
-const App: React.FC = () => {
-  const socket = useSocket()
-  const canvasRef = useRef<HTMLCanvasElement | null>(null)
-  const [elements, setElements] = useState<Array<CanvasElement>>([])
-  const [currentElement, setCurrentElement] = useState<CanvasElement | null>(null)
-  const [color, setColor] = useState<string>("#bdc4a7")
-  const [lineWidth, setLineWidth] = useState<number>(5)
-  
+import { io } from "socket.io-client";
+import { API_URL } from "@collaborative-drawing-board/shared";
+
+const socket = io(API_URL);
+
+export function App() {
+  const [color, setColor] = useState<string>("#ffff32");
+  const [elements, setElements] = useState<Array<CanvasElement>>([]);
+  const [currentTool, setCurrentTool] = useState<ToolTypes>(ToolTypes.CIRCLE);
+
   useEffect(() => {
+    socket.on(CanvasEvents.INITIALIZE_CANVAS, (data: Array<CanvasElement>) => {
+      console.debug(`Initialize_canvas called with data: ${data}.`)
+      setElements(data);
+    });
 
-  }, [elements]);
+    socket.on(CanvasEvents.UPDATE_CANVAS, (data: CanvasElement) => {
+      setElements((prev) => [...prev, data]);
+    });
 
-  const handleMousedown = () => {
-
-  }
-
-  const handleMouseMove = () => {
-
-  }
-
-  const handleMouseUp = () => {
-
-  }
-
-  const handleMouseOut = () => {
-
-  }
-
-  const handleOnWheel = () => {
-
-  }
-
-  const handleOnTouchStart = () => {
-
-  }
-
-  const handleOnTouchMove = () => {
-
-  }
-
-  const handleOnTouchCancel = () => {
-
-  }
-
-  const handleOnTouchEnd = () => {
-
-  }
+    return (() => {
+      socket.off(CanvasEvents.INITIALIZE_CANVAS);
+      socket.off(CanvasEvents.UPDATE_CANVAS);
+    });
+  }, [socket, elements]);
 
   return (
-    <div className='canvas-container'>
-      <canvas 
-        ref={canvasRef}
-        onMouseDown={() => {}}
-        onMouseMove={() => {}}
-        onMouseUp={() => {}}
-        onMouseOut={() => {}}
-        onWheel={() => {}}
-        onTouchStart={() => {}}
-        onTouchMove={() => {}}
-        onTouchCancel={() => {}}
-        onTouchEnd={() => {}}
-        onContextMenu={(e)=> e.preventDefault()}
-        ></canvas>
-        <input 
-          type="color" 
-          value={color} 
-          onChange={(e) => {setColor(e.target.value)}}
-          className='color-picker'
+        <div className="relative w-full h-full">
+        <input
+          type="color"
+          value={color}
+          onChange={(e) => setColor(e.target.value)}
+          className="absolute top-4 left-4 p-2 bg-white border border-gray-300 rounded shadow-md z-10"
         />
-    </div>
-  )
+        <Canvas
+          color={color}
+          currentTool={currentTool}
+          elements={elements}
+          setElements={setElements}
+          socket={socket}
+        />
+      </div>
+  );
 }
 
-export default App
+export default App;
