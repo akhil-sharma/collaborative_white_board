@@ -4,6 +4,7 @@ import { CanvasElement, CanvasEvents, ToolTypes } from "@collaborative-drawing-b
 
 import { io } from "socket.io-client";
 import { API_URL } from "@collaborative-drawing-board/shared";
+import Tools from "./components/Tools";
 
 const socket = io(API_URL);
 
@@ -15,7 +16,7 @@ export function App() {
   useEffect(() => {
     socket.on(CanvasEvents.INITIALIZE_CANVAS, (data: Array<CanvasElement>) => {
       console.debug(`Initialize_canvas called with data: ${data}.`)
-      setElements(data);
+      setElements((prev) => [...prev, ...data]);
     });
 
     socket.on(CanvasEvents.UPDATE_CANVAS, (data: CanvasElement) => {
@@ -30,11 +31,11 @@ export function App() {
 
   return (
         <div className="relative w-full h-full">
-        <input
-          type="color"
-          value={color}
-          onChange={(e) => setColor(e.target.value)}
-          className="absolute top-4 left-4 p-2 bg-white border border-gray-300 rounded shadow-md z-10"
+        <Tools
+          color={color}
+          setColor={setColor}
+          currentTool={currentTool}
+          setCurrentTool={setCurrentTool}
         />
         <Canvas
           color={color}
